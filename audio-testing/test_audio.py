@@ -1,7 +1,7 @@
 import pygame
 import os
 
-os.system("amixer sset Master 70%")
+os.system("amixer sset Master 50%")
 pygame.init()
 
 my_sound = pygame.mixer.Sound('audio-testing/falling_funk.wav')
