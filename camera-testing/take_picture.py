@@ -10,5 +10,5 @@ picam2.set_controls({"ExposureTime": 10000, "AfMode": controls.AfModeEnum.Manual
 picam2.start()
 picam2.capture_file("camera-testing/image.jpg")
 image = cv2.imread("camera-testing/image.jpg")
-cropped = image[0:2592, 463:4000]
+cropped = image[0:2592, 350:3600]
 cv2.imwrite("camera-testing/cropped.jpg", cropped)
