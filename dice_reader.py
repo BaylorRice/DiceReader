@@ -1,6 +1,12 @@
 import cv2
 import numpy as np
 from enum import Enum
+import pygame
+import os
+
+# Initilize PyGame
+os.system("amixer sset Master 50%")
+pygame.init()
 
 class State(Enum):
     WAITING_FOR_DICE = 1
