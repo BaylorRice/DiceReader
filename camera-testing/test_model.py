@@ -2,7 +2,6 @@ from inference import get_model
 import supervision as sv
 import cv2
 from picamera2 import Picamera2
-import time
 from libcamera import controls
 import os
 
