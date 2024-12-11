@@ -8,6 +8,10 @@ from picamera2 import Picamera2
 from libcamera import controls
 from inference import get_model
 import supervision as sv
+import torch
+from torch import nn
+from torchvision import transforms, models
+from PIL import Image
 
 try:
     # Initilize PyGame
@@ -110,6 +114,41 @@ try:
         speaking = playing.get_busy()
         return speaking
 
+    def load_number_model(model_path="number_model.pth", num_classes=6):
+        model = models.resnet18(pretrained=False)
+        model.fc = nn.Linear(model.fc.in_features, num_classes)
+        model.load_state_dict(torch.load(model_path, map_location=torch.device('cpu')))
+        model.eval()
+        return model
+    
+    def get_transforms():
+        # this is the same transforms used during training
+        data_transforms = transforms.Compose([
+            transforms.Resize((640, 640)),
+            transforms.ToTensor(),
+            transforms.Normalize([0.485, 0.456, 0.406],
+                                 [0.229, 0.224, 0.225])
+        ])
+        return data_transforms
+    
+    def predict_number(model):
+        global cropped_face_image
+        img = cropped_face_image
+        classes = ['1', '2', '3', '4', '5', '6']
+
+        data_transforms = get_transforms()
+        img_tensor = data_transforms(img).unsqueeze(0)
+
+        with torch.no_grad():
+            outputs = model(img_tensor)
+            _, predicted = torch.max(outputs, 1)
+            predicted_class = classes[predicted.item()]
+
+        return predicted_class
+
+    # Load Torch Model
+    number_model = load_number_model("number_model.pth")
+    
     # Start Confirm Audio
     play_audio('audio_files/finished_startup.wav')
 
@@ -123,11 +162,12 @@ try:
                 curr_state = State.DICE_DETECTED
 
         elif (curr_state == State.DICE_DETECTED):
-            cv2.imwrite("cropped.jpg", cropped_face_image)
-            # Use Model to Detect Number
-            print("Dice Detected!")
             dice_number = None
+            print("Dice Detected!")
 
+            # Use Model to Detect Number
+            dice_number = predict_number(number_model)
+            
             # State Change
             if (dice_number != None):
                 curr_state = State.SPEAK_NUMBER
