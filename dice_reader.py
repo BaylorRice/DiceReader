@@ -165,6 +165,11 @@ try:
             dice_number = None
             print("Dice Detected!")
 
+            # REMOVE THIS V
+            cv2.imwrite("cropped.jpg",cropped_face_image)
+            sys.exit(0)
+            # REMOVE THIS ^
+
             # Use Model to Detect Number
             #dice_number = predict_number(number_model)
             
