@@ -1,3 +1,9 @@
+# DiceReader
+# Reese Ford, Dylan Deyhimi, Demetri Tyra
+# Created 12/10/2024
+# Modified 10/11/2024 by Reese Ford
+# Last Commit: 
+
 import cv2
 from enum import Enum
 import pygame
