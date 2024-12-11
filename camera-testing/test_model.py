@@ -6,7 +6,9 @@ import time
 from libcamera import controls
 import os
 
-os.environ["ROBOFLOW_API_KEY"] = "J9tV3kwjI7eWiwKtmw4h"
+from dotenv import load_dotenv
+load_dotenv()
+ROBOFLOW_API_KEY = os.getenv("ROBOFLOW_API_KEY")
 
 picam2 = Picamera2()
 camera_config = picam2.create_still_configuration()

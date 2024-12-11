@@ -4,6 +4,11 @@ from enum import Enum
 import pygame
 import os
 
+# Set roboflow API Key
+from dotenv import load_dotenv
+load_dotenv()
+ROBOFLOW_API_KEY = os.getenv("ROBOFLOW_API_KEY")
+
 # Initilize PyGame
 os.system("amixer sset Master 90%")
 pygame.init()
