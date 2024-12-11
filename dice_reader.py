@@ -27,9 +27,19 @@ try:
     picam2.set_controls({"ExposureTime": 10000, "AfMode": controls.AfModeEnum.Manual, "LensPosition": 2.0})
     picam2.start()
 
+    # State Machine Enumeration
+    class State(Enum):
+        WAITING_FOR_DICE = 1
+        DICE_DETECTED = 2
+        SPEAK_NUMBER = 3
+        WAITING_FOR_DICE_TO_LEAVE = 4
+
+    curr_state = State.WAITING_FOR_DICE_TO_LEAVE
+
     # Define Functions
     def dice_detected():
         global cropped_face_image
+        global curr_state
 
         face_detected = False
 
@@ -75,7 +85,7 @@ try:
                 if (pred.confidence >= 0.75):
                     face_detected = True
 
-        if face_detected:
+        if face_detected and curr_state == State.WAITING_FOR_DICE:
             right_face_image =cv2.cvtColor(face_image, cv2.COLOR_BGR2RGB)
 
             x_center = pred.x
@@ -99,15 +109,6 @@ try:
             pygame.time.delay(100)
         speaking = playing.get_busy()
         return speaking
-
-    # State Machine Enumeration
-    class State(Enum):
-        WAITING_FOR_DICE = 1
-        DICE_DETECTED = 2
-        SPEAK_NUMBER = 3
-        WAITING_FOR_DICE_TO_LEAVE = 4
-
-    curr_state = State.WAITING_FOR_DICE
 
     # Start Confirm Audio
     play_audio('audio_files/finished_startup.wav')
@@ -141,7 +142,6 @@ try:
 
         elif (curr_state == State.WAITING_FOR_DICE_TO_LEAVE):
             dice_detect = dice_detected()
-            dice_detect = False
 
             # State Change
             if dice_detect == False:
