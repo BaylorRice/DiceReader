@@ -29,6 +29,8 @@ try:
 
     # Define Functions
     def dice_detected():
+        global cropped_face_image
+
         face_detected = False
 
         ## Motion Detection Loop
@@ -68,10 +70,25 @@ try:
         results = model.infer(face_image)[0]
 
         if len(results.predictions) > 0:
-            if results.predictions[0].class_name == "dice":
-                if (results.predictions[0].confidence >= 0.75):
-                    # Crop Image?
+            pred = results.predictions[0]
+            if pred.class_name == "dice":
+                if (pred.confidence >= 0.75):
                     face_detected = True
+
+        if face_detected:
+            right_face_image =cv2.cvtColor(face_image, cv2.COLOR_BGR2RGB)
+
+            x_center = pred.x
+            y_center = pred.y
+            width = pred.width
+            height = pred.height
+
+            x_min = int(x_center - width/2)
+            x_max = int(x_center + width/2)
+            y_min = int(y_center - height/2)
+            y_max = int(y_center + height/2)
+
+            cropped_face_image = right_face_image[y_min:y_max, x_min:x_max]
 
         return face_detected
 
@@ -105,6 +122,7 @@ try:
                 curr_state = State.DICE_DETECTED
 
         elif (curr_state == State.DICE_DETECTED):
+            cv2.imwrite("cropped.jpg", cropped_face_image)
             # Use Model to Detect Number
             print("Dice Detected!")
             dice_number = None
