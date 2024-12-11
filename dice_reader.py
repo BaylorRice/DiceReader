@@ -32,12 +32,10 @@ class State(Enum):
 
 curr_state = State.WAITING_FOR_DICE
 
-def dice_detected():
-    face_detected = True
-    # Motion Detection Loop
-    # Look for Dice
-    return face_detected
+# Start Confirm Audio
+play_audio('startup.wav')
 
+# Main Loop
 while True:
     if (curr_state == State.WAITING_FOR_DICE):
         dice_detect = dice_detected()
