@@ -8,6 +8,7 @@ from picamera2 import Picamera2
 from libcamera import controls
 from inference import get_model
 import supervision as sv
+import re
 
 try:
     # Initilize Roboflow Inference
@@ -17,7 +18,7 @@ try:
     model = get_model(model_id="dice-finder-qey6z/1")
 
     # Initilize PyGame
-    os.system("amixer sset Master 90%")
+    os.system("amixer sset Master 50%")
     pygame.init()
 
     # Initialize Camera
@@ -62,8 +63,17 @@ try:
             else:
                 print("No Motion Detected")
                 motion_detected = False
+                face_image = image1
 
-        # Look for Dice
+        ## Look for Dice
+        results = model.infer(face_image)[0]
+
+        if len(results.predictions) > 0:
+            if results.predictions[0].class_name == "dice":
+                if (results.predictions[0].confidence >= 0.75):
+                    # Crop Image?
+                    face_detected = True
+
         return face_detected
 
     def play_audio(filename):
@@ -97,6 +107,7 @@ try:
 
         elif (curr_state == State.DICE_DETECTED):
             # Use Model to Detect Number
+            print("Dice Detected!")
             dice_number = None
 
             # State Change
