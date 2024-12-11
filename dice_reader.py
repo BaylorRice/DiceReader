@@ -38,7 +38,7 @@ try:
         SPEAK_NUMBER = 3
         WAITING_FOR_DICE_TO_LEAVE = 4
 
-    curr_state = State.WAITING_FOR_DICE_TO_LEAVE
+    curr_state = State.WAITING_FOR_DICE
 
     # Define Functions
     def dice_detected():
@@ -147,7 +147,7 @@ try:
         return predicted_class
 
     # Load Torch Model
-    number_model = load_number_model("number_model.pth")
+    #number_model = load_number_model("number_model.pth")
     
     # Start Confirm Audio
     play_audio('audio_files/finished_startup.wav')
@@ -166,7 +166,7 @@ try:
             print("Dice Detected!")
 
             # Use Model to Detect Number
-            dice_number = predict_number(number_model)
+            #dice_number = predict_number(number_model)
             
             # State Change
             if (dice_number != None):
