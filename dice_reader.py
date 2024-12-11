@@ -8,18 +8,17 @@ from picamera2 import Picamera2
 from libcamera import controls
 from inference import get_model
 import supervision as sv
-import re
 
 try:
+    # Initilize PyGame
+    os.system("amixer sset Master 50%")
+    pygame.init()
+    
     # Initilize Roboflow Inference
     from dotenv import load_dotenv
     load_dotenv()
     ROBOFLOW_API_KEY = os.getenv("ROBOFLOW_API_KEY")
     model = get_model(model_id="dice-finder-qey6z/1")
-
-    # Initilize PyGame
-    os.system("amixer sset Master 50%")
-    pygame.init()
 
     # Initialize Camera
     picam2 = Picamera2()
@@ -94,7 +93,7 @@ try:
     curr_state = State.WAITING_FOR_DICE
 
     # Start Confirm Audio
-    play_audio('startup.wav')
+    play_audio('audio_files/finished_startup.wav')
 
     # Main Loop
     while True:
