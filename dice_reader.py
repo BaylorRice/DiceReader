@@ -24,7 +24,6 @@ os.chdir("/home/pi/Documents/DiceReader")
 
 try:
     # Initilize PyGame
-    os.system("amixer sset Master 50%")
     pygame.init()
     
     # Initilize Roboflow Inference
@@ -115,11 +114,14 @@ try:
 
         return face_detected
 
-    def play_audio(filename):
+    def play_audio(filename, volume=60, wait=True):
+        pygame.mixer.stop()
+        os.system("amixer sset Master " + str(volume) + "%")
         my_sound = pygame.mixer.Sound(filename)
         playing = my_sound.play()
-        while playing.get_busy():
-            pygame.time.delay(100)
+        if wait:
+            while playing.get_busy():
+                pygame.time.delay(100)
         speaking = playing.get_busy()
         return speaking
 
@@ -156,21 +158,25 @@ try:
         return predicted_class
 
     # Load Torch Model
+    os.system("amixer sset Master 50%")
     number_model = load_number_model("number_model.pth")
     
     # Start Confirm Audio
-    play_audio('audio_files/finished_startup.wav')
+    play_audio('audio_files/finished_startup.wav',50)
 
     # Main Loop
     while True:
         if (curr_state == State.WAITING_FOR_DICE):
+            print("------------------ WAITING FOR DICE ------------------")
             dice_detect = dice_detected()
 
             # State Change
             if dice_detect == True:
                 curr_state = State.DICE_DETECTED
+                play_audio("audio_files/drum_roll.mp3", 80, False)
 
         elif (curr_state == State.DICE_DETECTED):
+            print("------------------ DICE DETECTED ------------------")
             dice_number = None
             print("Dice Detected!")
 
@@ -184,14 +190,16 @@ try:
                 curr_state = State.SPEAK_NUMBER
 
         elif (curr_state == State.SPEAK_NUMBER):
+            print("------------------ SPEAK NUMBER ------------------")
             # Play Sound File based on dice_number
-            speaking = play_audio('audio_files/dice_'+str(dice_number)+'.mp3')
+            speaking = play_audio('audio_files/dice_'+str(dice_number)+'.mp3',90)
 
             # State Change
             if (speaking == False):
                 curr_state = State.WAITING_FOR_DICE_TO_LEAVE
 
         elif (curr_state == State.WAITING_FOR_DICE_TO_LEAVE):
+            print("------------------ WAITING FOR DICE TO LEAVE ------------------")
             dice_detect = dice_detected()
 
             # State Change
