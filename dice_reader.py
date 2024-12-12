@@ -18,6 +18,9 @@ import torch
 from torch import nn
 from torchvision import transforms, models
 from PIL import Image
+from numpy import ndarray
+
+os.chdir("/home/pi/Documents/DiceReader")
 
 try:
     # Initilize PyGame
@@ -137,10 +140,10 @@ try:
         ])
         return data_transforms
     
-    def predict_number(model):
-        global cropped_face_image
-        img = cropped_face_image
+    def predict_number(model, image_path):
         classes = ['1', '2', '3', '4', '5', '6']
+
+        img = Image.open(image_path).convert("RGB")
 
         data_transforms = get_transforms()
         img_tensor = data_transforms(img).unsqueeze(0)
@@ -153,7 +156,7 @@ try:
         return predicted_class
 
     # Load Torch Model
-    #number_model = load_number_model("number_model.pth")
+    number_model = load_number_model("number_model.pth")
     
     # Start Confirm Audio
     play_audio('audio_files/finished_startup.wav')
@@ -171,14 +174,11 @@ try:
             dice_number = None
             print("Dice Detected!")
 
-            # REMOVE THIS V
             cv2.imwrite("cropped.jpg",cropped_face_image)
-            sys.exit(0)
-            # REMOVE THIS ^
 
             # Use Model to Detect Number
-            #dice_number = predict_number(number_model)
-            
+            dice_number = predict_number(number_model, "cropped.jpg")
+
             # State Change
             if (dice_number != None):
                 curr_state = State.SPEAK_NUMBER
