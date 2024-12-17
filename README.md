@@ -2,7 +2,7 @@
 Reese Ford, Dyla Deyhimi, Demetri Tyra\
 Baylor University - ELC 4438 - Embedded Final Project
 
-![An image of a device with a camera mounted above a dice mat with a d6 die on it](readme_images\cover_image.png)
+![cover_image](https://github.com/user-attachments/assets/5950e946-4f7d-40b7-b2fc-41782ac6d6fd)
 
 ## Project Summary
 This device is a camera rig system that detects and audibly reads the number of a D6 dice roll on a D&D dice mat.
@@ -22,7 +22,7 @@ The device is constructed using 2 PVC pipes joined with a PVC elbow connector. A
 The Raspberry Pi 4 Model B was chosen as the hardware platform for its flexibility with an easy-to-use first party camera module, the RPi Camera Module 3.  The camera module connects to the RPi via ribbon cable into the Pi’s first party camera port.  Other hardware connections include USB connections from Pi to speaker and from battery bank to Pi.
 
 ### Hardware Design
-![alt text](readme_images\schematic.png)
+![schematic](https://github.com/user-attachments/assets/5013d077-b2f5-484a-979b-f7a824e51c87)
 
 Peripherals include the Pi Camera 3 and an external battery bank to power the RPi and ring light.  Due to the design’s dependence on data transfer between the camera and the Pi, no GPIO connections were necessary.  The Raspberry Pi is compatible with the Pi Camera through a designated ribbon-cable header.
 
@@ -51,16 +51,16 @@ We were able to call the model with an API key similar to how one would want to 
 
 Number recognition time, the script I created to do this trains a deep learning model to classify images into six categories (being the dice faces) using PyTorch (a library of python). It begins by resizing, normalizing, and converting the images into tensors . The dataset was then split into training and validation subsets that were based on specific naming patterns in the image filenames. The model I used was a pretrained ResNet18 model in which we fine tuned by replacing the final layer in it to match the output for the six output classes. Then I trained the model over 10 epochs using the Adam optimizer as well as a cross-entropy loss function, with the performance being tracked through some loss and accuracy metrics. Once it is done running the fully trained model is saved as a “.pth” file in order to be run later.
 
-![alt text](readme_images\ml_1.png)
+![ml_1](https://github.com/user-attachments/assets/c3861a77-016e-43b2-bc1b-193758e32bfc)
 
-![alt text](readme_images\cropped_dice.png)
+![cropped_dice](https://github.com/user-attachments/assets/dbbf0273-f732-4b11-8857-583a2e2d03fa)
 
-![alt text](readme_images\bounded_dice.png)
+![bounded_dice](https://github.com/user-attachments/assets/8c01c09d-143e-4d90-a408-10f478415145)
 
 ### State Machine
 Because of the simplicity of the logic in our design (Scan, Speak, Repeat), a state machine is the best option for describing and programming the operation. In preliminary design, we tried to use an activity diagram, but looking at the state machine diagram shown below, it works much better as a state machine.
 
-![alt text](readme_images\state_machine.png)
+![state_machine](https://github.com/user-attachments/assets/c8278e74-6c7f-41b9-9886-b0c48ed9a0ce)
 
 The flow of logic follows a very linear path: 
 1. The program starts out in the WAITING_FOR_DICE state by taking two images, one slightly after another. By subtracting the images, the program can determine if there is motion between the two images.
