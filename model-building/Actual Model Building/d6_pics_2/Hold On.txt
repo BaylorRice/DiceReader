@@ -1,0 +1,1 @@
+Because of the number of images and how long it took to do anything Git related, the training images were removed from this repo
